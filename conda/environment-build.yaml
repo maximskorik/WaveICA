@@ -1,0 +1,18 @@
+name: recetox-waveica-build
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - anaconda-client
+  - conda-build
+  - conda-verify
+  - r-base >= 4.1.0
+  - r-waveslim
+  - r-jade
+  - r-corpcor
+  - r-proc
+  - r-plsdepot
+  - r-fdrtool
+  - r-scatterplot3d
+  - r-ggfortify
