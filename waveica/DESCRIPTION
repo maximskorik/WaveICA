@@ -9,4 +9,16 @@ License: No
 Encoding: UTF-8
 LazyData: true
 Imports: waveslim, JADE, corpcor 
-Suggests: pROC, parallel, plsdepot, fdrtool, scatterplot3d, ggfortify, RColorBrewer, ggplot2, graphics, stats
+Suggests: 
+    pROC,
+    parallel,
+    plsdepot,
+    fdrtool,
+    scatterplot3d,
+    ggfortify,
+    RColorBrewer,
+    ggplot2,
+    graphics,
+    stats,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
