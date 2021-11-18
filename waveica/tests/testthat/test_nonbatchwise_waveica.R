@@ -1,0 +1,26 @@
+patrick::with_parameters_test_that("Nonbatchwise WaveICA:", {
+  input_data_path <- file.path("test-data", test_input)
+  input_data <- readRDS(input_data_path)
+  
+  injection_order <- select(input_data, injectionOrder)
+  input_data <- select(input_data, -any_of(c("sampleName", "injectionOrder", "sampleType", "batch", "class")))
+  
+  actual <- WaveICA_2.0(data = input_data,
+                        wf = "haar",
+                        Injection_Order = injection_order,
+                        alpha = 0,
+                        Cutoff = 0.1,
+                        K = 10)
+  actual <- actual$data_wave
+  
+  expected_path <- file.path("test-data/nonbatchwise-correction", expected)
+  expected <- readRDS(expected_path)
+  
+  expect_equal(actual, expected)
+},
+patrick::cases(
+  amide_v1 = list(test_input = "amide_data_v1.rds",
+                  expected = "amide_corrected_v1.rds"),
+  amide_v2 = list(test_input = "amide_data_v2.rds",
+                  expected = "amide_corrected_v2.rds")
+))
