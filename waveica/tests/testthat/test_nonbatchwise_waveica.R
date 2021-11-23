@@ -2,8 +2,8 @@ patrick::with_parameters_test_that("Nonbatchwise WaveICA:", {
   input_data_path <- file.path("test-data", test_input)
   input_data <- readRDS(input_data_path)
   
-  injection_order <- select(input_data, injectionOrder)
-  input_data <- select(input_data, -any_of(c("sampleName", "injectionOrder", "sampleType", "batch", "class")))
+  injection_order <- dplyr::select(input_data, injectionOrder)
+  input_data <- dplyr::select(input_data, -any_of(c("sampleName", "injectionOrder", "sampleType", "batch", "class")))
   
   actual <- WaveICA_2.0(data = input_data,
                         wf = "haar",
