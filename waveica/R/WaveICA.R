@@ -29,9 +29,6 @@ WaveICA <- function(data,
   ### Wavelet Decomposition
   library(waveslim)
   level <- floor(log(nrow(data), 2))
-  if (is.null(colnames(data))) {
-    stop("data must have colnames")
-  }
   coef <- list()
   for (k in 1:(level + 1)) {
     coef[[k]] <- matrix(NA, nrow(data), ncol(data))
