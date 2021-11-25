@@ -15,6 +15,29 @@ wt_decomposition <- function(data, level, wf) {
   return(coef)
 }
 
+wt_reconstruction <- function(data, data_wave_ICA, wf) {
+  ### Wavelet Reconstruction
+  index <- ncol(data)
+  index1 <- length(data_wave_ICA)
+  data_coef <- matrix(NA, nrow(data_wave_ICA[[1]]), index1)
+  data_wave <- matrix(NA, nrow(data_wave_ICA[[1]]), ncol(data_wave_ICA[[1]]))
+  cat(paste("Reconstructing...\n"))
+  for (i in 1:index) {
+    for (j in 1:index1) {
+      data_coef[, j] <- data_wave_ICA[[j]][, i]
+    }
+    data_temp <- data[, i]
+    data_coef <- as.data.frame(data_coef)
+    colnames(data_coef) <- c(paste("d", 1:(index1 - 1), sep = ""), paste("s", (index1 - 1), sep = ""))
+    y <- as.list(data_coef)
+    attributes(y)$class <- "modwt"
+    attributes(y)$wavelet <- wf
+    attributes(y)$boundary <- "periodic"
+    data_wave[, i] <- imodwt(y) + mean(data_temp)
+  }
+  return(data_wave)
+}
+
 #' @title WaveICA
 #' @description Removing batch effects for metabolomics data.
 #' @author Kui Deng
@@ -82,25 +105,8 @@ WaveICA <- function(data,
     }
   }
 
-  ### Wavelet Reconstruction
-  index <- ncol(data)
-  index1 <- length(data_wave_ICA)
-  data_coef <- matrix(NA, nrow(data_wave_ICA[[1]]), index1)
-  data_wave <- matrix(NA, nrow(data_wave_ICA[[1]]), ncol(data_wave_ICA[[1]]))
-  cat(paste("Reconstructing...\n"))
-  for (i in 1:index) {
-    for (j in 1:index1) {
-      data_coef[, j] <- data_wave_ICA[[j]][, i]
-    }
-    data_temp <- data[, i]
-    data_coef <- as.data.frame(data_coef)
-    colnames(data_coef) <- c(paste("d", 1:(index1 - 1), sep = ""), paste("s", (index1 - 1), sep = ""))
-    y <- as.list(data_coef)
-    attributes(y)$class <- "modwt"
-    attributes(y)$wavelet <- wf
-    attributes(y)$boundary <- "periodic"
-    data_wave[, i] <- imodwt(y) + mean(data_temp)
-  }
+  data_wave <- wt_reconstruction(data, data_wave_ICA, wf)
+
   rownames(data_wave) <- rownames(data)
   colnames(data_wave) <- colnames(data)
   return(list(data_wave = data_wave))
