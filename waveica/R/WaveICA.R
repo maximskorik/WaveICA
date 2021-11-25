@@ -15,7 +15,7 @@
 #' @param alpha The trade-off value between the independence of samples and those
 #' of variables and should be between 0 and 1.
 #' @return A list that contains the clean data.
-#' @importFrom waveslim modwt
+#' @importFrom waveslim modwt imodwt
 #' @export
 WaveICA <- function(data,
                     wf = "haar",
