@@ -15,6 +15,7 @@
 #' @param alpha The trade-off value between the independence of samples and those
 #' of variables and should be between 0 and 1.
 #' @return A list that contains the clean data.
+#' @importFrom waveslim modwt
 #' @export
 WaveICA <- function(data,
                     wf = "haar",
@@ -27,14 +28,13 @@ WaveICA <- function(data,
                     t2 = 0.05,
                     alpha = 0) {
   ### Wavelet Decomposition
-  library(waveslim)
   level <- floor(log(nrow(data), 2))
   coef <- list()
   for (k in 1:(level + 1)) {
     coef[[k]] <- matrix(NA, nrow(data), ncol(data))
   }
+  cat(paste("Decomposing...\n"))
   for (j in 1:ncol(data)) {
-    # cat(paste("######Decomposition",j,"########\n"))
     data_temp <- data[, j]
     x_modwt <- modwt(data_temp, wf = wf, n.levels = level)
     for (k in 1:(level + 1)) {
@@ -44,8 +44,8 @@ WaveICA <- function(data,
   ##### ICA
   index <- level + 1
   data_wave_ICA <- list()
+  cat(paste("Performing ICA...\n"))
   for (i in (1:index)) {
-    # cat(paste("######### ICA",i,"#############\n"))
     data_coef <- coef[[i]]
     data_coef_ICA <- normFact(fact = "stICA", X = t(data_coef), ref = batch, refType = "categorical", k = K, t = t, ref2 = group, refType2 = "categorical", t2 = t2, alpha)
     data_wave_ICA[[i]] <- t(data_coef_ICA$Xn)
@@ -55,8 +55,8 @@ WaveICA <- function(data,
   index1 <- length(data_wave_ICA)
   data_coef <- matrix(NA, nrow(data_wave_ICA[[1]]), index1)
   data_wave <- matrix(NA, nrow(data_wave_ICA[[1]]), ncol(data_wave_ICA[[1]]))
+  cat(paste("Reconstructing...\n"))
   for (i in 1:index) {
-    # cat(paste("######Reconstruction",i,"########\n"))
     for (j in 1:index1) {
       data_coef[, j] <- data_wave_ICA[[j]][, i]
     }

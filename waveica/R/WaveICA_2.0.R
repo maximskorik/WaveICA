@@ -42,7 +42,7 @@ WaveICA_2.0<-function(data,wf="haar",Injection_Order,alpha,Cutoff,K){
   ### Wavelet Decomposition
   library(waveslim)
   library(parallel)
-  library(ica)
+  # library(ica)
   library(mgcv)
   level<-floor(log(nrow(data),2))
   if (is.null(colnames(data))){
@@ -53,7 +53,7 @@ WaveICA_2.0<-function(data,wf="haar",Injection_Order,alpha,Cutoff,K){
     coef[[k]] <-matrix(NA,nrow(data),ncol(data))
   }
   for (j in 1:ncol(data)){
-    cat(paste("######Decomposition",j,"########\n"))
+    # cat(paste("######Decomposition",j,"########\n"))
     data_temp<-data[,j]
     x_modwt<-modwt(data_temp,wf=wf,n.levels =level)
     for (k in 1:(level+1)){
@@ -65,7 +65,7 @@ WaveICA_2.0<-function(data,wf="haar",Injection_Order,alpha,Cutoff,K){
   index<-level+1
   data_wave_ICA<-list()
   for (i in (1:index)){
-    cat(paste("######### ICA",i,"#############\n"))
+    # cat(paste("######### ICA",i,"#############\n"))
     data_coef<-coef[[i]]
     data_coef_ICA<-unbiased_stICA(X=t(data_coef),k=K,alpha)
     B <- data_coef_ICA$B
@@ -95,7 +95,7 @@ WaveICA_2.0<-function(data,wf="haar",Injection_Order,alpha,Cutoff,K){
   data_coef<-matrix(NA,nrow(data_wave_ICA[[1]]),index1)
   data_wave<-matrix(NA,nrow(data_wave_ICA[[1]]),ncol(data_wave_ICA[[1]]))
   for (i in 1:index){
-    cat(paste("######Reconstruction",i,"########\n"))
+    # cat(paste("######Reconstruction",i,"########\n"))
     for (j in 1:index1){
       data_coef[,j]<-data_wave_ICA[[j]][,i]
     }
