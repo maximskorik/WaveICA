@@ -15,12 +15,14 @@
 #' @param alpha The trade-off value between the independence of samples and those
 #' of variables and should be between 0 and 1.
 #' @return A list that contains the clean data.
+#' @importFrom mgcv gam
+#' @importFrom parallel mclapply
 #' @importFrom waveslim modwt imodwt
 #' @export
 WaveICA <- function(data,
                     wf = "haar",
                     batch = NULL,
-                    cutoff = NULL,
+                    Cutoff = NULL,
                     injection_order = NULL,
                     group = NULL,
                     K = 20,
@@ -47,9 +49,32 @@ WaveICA <- function(data,
   cat(paste("Performing ICA...\n"))
   for (i in (1:index)) {
     data_coef <- coef[[i]]
+    if (is.null(batch)) {
+      data_coef_ICA<-unbiased_stICA(X=t(data_coef),k=K,alpha)
+      B <- data_coef_ICA$B
+      A <- data_coef_ICA$A
+      B <- as.data.frame(B)
+
+      ## Gam
+      corr <- mclapply(B,function(x){
+      corr <- gam(x~s(Injection_Order))
+      corr_summary <- summary(corr)
+      corr_r <- corr_summary$r.sq
+      return(corr_r)
+      })
+      corr <- unlist(corr)
+      label <- which(corr>=Cutoff)
+      B_new <- B[,label,drop=F]
+      A_new <- A[,label,drop=F]
+      Xn = data_coef-t(A_new %*% t(B_new))
+
+      data_wave_ICA[[i]]<-Xn
+    } else {
     data_coef_ICA <- normFact(fact = "stICA", X = t(data_coef), ref = batch, refType = "categorical", k = K, t = t, ref2 = group, refType2 = "categorical", t2 = t2, alpha)
     data_wave_ICA[[i]] <- t(data_coef_ICA$Xn)
+    }
   }
+
   ### Wavelet Reconstruction
   index <- ncol(data)
   index1 <- length(data_wave_ICA)
