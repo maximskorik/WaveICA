@@ -7,7 +7,7 @@ patrick::with_parameters_test_that("Nonbatchwise WAveICA:", {
 
   actual <- WaveICA(data = input_data,
                     wf = "haar",
-                    group = group,
+                    Injection_order = injection_order,
                     K = 10,
                     alpha = 0,
                     Cutoff = 0.1)
