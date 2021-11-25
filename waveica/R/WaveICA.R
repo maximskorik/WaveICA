@@ -1,3 +1,20 @@
+wt_decomposition <- function(data, level, wf) {
+  ### Wavelet Decomposition
+  coef <- list()
+  for (k in 1:(level + 1)) {
+    coef[[k]] <- matrix(NA, nrow(data), ncol(data))
+  }
+  cat(paste("Decomposing...\n"))
+  for (j in 1:ncol(data)) {
+    data_temp <- data[, j]
+    x_modwt <- modwt(data_temp, wf = wf, n.levels = level)
+    for (k in 1:(level + 1)) {
+      coef[[k]][, j] <- x_modwt[[k]]
+    }
+  }
+  return(coef)
+}
+
 #' @title WaveICA
 #' @description Removing batch effects for metabolomics data.
 #' @author Kui Deng
@@ -29,20 +46,10 @@ WaveICA <- function(data,
                     t = 0.05,
                     t2 = 0.05,
                     alpha = 0) {
-  ### Wavelet Decomposition
+
   level <- floor(log(nrow(data), 2))
-  coef <- list()
-  for (k in 1:(level + 1)) {
-    coef[[k]] <- matrix(NA, nrow(data), ncol(data))
-  }
-  cat(paste("Decomposing...\n"))
-  for (j in 1:ncol(data)) {
-    data_temp <- data[, j]
-    x_modwt <- modwt(data_temp, wf = wf, n.levels = level)
-    for (k in 1:(level + 1)) {
-      coef[[k]][, j] <- x_modwt[[k]]
-    }
-  }
+  coef <- wt_decomposition(data, level, wf)
+
   ##### ICA
   index <- level + 1
   data_wave_ICA <- list()
