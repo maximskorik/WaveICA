@@ -1,4 +1,53 @@
+jadeCummulantMatrices <- function(X) {
+  # calcs the n(n+1)/2 cum matrices used in JADE, see A. Cichocki and S. Amari. Adaptive blind signal and image
+  # processing. John Wiley & Sons, 2002. book, page 173
+  # (pdf:205), C.1
+  # does not need whitened data X (n x t)
+  # Args:
+  #   matrix X
+  # Returns:
+  #   M as n x n x (n(n+1)/2) array, each n x n matrix is one of the n(n+1)/2 cumulant matrices used in JADE
 
+  # adapted code from Matlab implementation of F. Theis, see
+  #  F.J. Theis, P. Gruber, I. Keck, A. Meyer-Baese and E.W. Lang,
+  #  'Spatiotemporal blind source separation using double-sided approximate joint diagonalization',
+  #  EUSIPCO 2005 (Antalya), 2005.
+
+
+  n <- nrow(X)
+  t <- ncol(X)
+
+  M <- array(0,c(n,n,n*(n+1)/2))
+  scale <- matrix(1,n,1)/t  # for convenience
+
+
+  R <- cov(t(X)) # covariance
+
+  k <- 1
+  for (p in 1:n){
+    #case q=p
+    C <- ((scale %*% (X[p,]*X[p,]))*X) %*% t(X)
+    E <- matrix(0,n,n)
+    E[p,p] <- 1
+    M[,,k] <- C - R %*% E %*% R - sum(diag(E %*% R)) * R - R %*% t(E) %*% R
+    k <- k+1
+    #case q<p
+    if (p > 1) {
+      for (q in 1:(p-1)){
+        C <- ((scale %*% (X[p,]*X[q,]))*X) %*% t(X) * sqrt(2)
+        E <- matrix(0,n,n)
+        E[p,q] <- 1/sqrt(2)
+        E[q,p] <- E[p,q]
+        M[,,k] <- C - R %*% E %*% R - sum(diag(E %*% R)) * R - R %*% t(E) %*% R
+        k <- k+1
+      }
+    }
+  }
+  return(M)
+}
+
+#' @importFrom corpcor pseudoinverse
+#' @importFrom JADE rjd
 unbiased_stICA <- function(X,k=10,alpha) {
 
   #
@@ -39,64 +88,6 @@ unbiased_stICA <- function(X,k=10,alpha) {
   #  rotations (matlab-file RJD), see
   #  J.-F. Cardoso and A. Souloumiac, 'Jacobi angles for simultaneous diagonalization',
   #  SIAM J. Mat. Anal. Appl., vol 17(1), pp. 161-164, 1995
-
-  library(JADE)
-  library(corpcor)
-
-  jadeCummulantMatrices <- function(X) {
-    # calcs the n(n+1)/2 cum matrices used in JADE, see A. Cichocki and S. Amari. Adaptive blind signal and image
-    # processing. John Wiley & Sons, 2002. book, page 173
-    # (pdf:205), C.1
-    # does not need whitened data X (n x t)
-    # Args:
-    #   matrix X
-    # Returns:
-    #   M as n x n x (n(n+1)/2) array, each n x n matrix is one of the n(n+1)/2 cumulant matrices used in JADE
-
-    # adapted code from Matlab implementation of F. Theis, see
-    #  F.J. Theis, P. Gruber, I. Keck, A. Meyer-Baese and E.W. Lang,
-    #  'Spatiotemporal blind source separation using double-sided approximate joint diagonalization',
-    #  EUSIPCO 2005 (Antalya), 2005.
-
-
-    n <- nrow(X)
-    t <- ncol(X)
-
-    M <- array(0,c(n,n,n*(n+1)/2))
-    scale <- matrix(1,n,1)/t  # for convenience
-
-
-    R <- cov(t(X)) # covariance
-
-    k <- 1
-    for (p in 1:n){
-      #case q=p
-      C <- ((scale %*% (X[p,]*X[p,]))*X) %*% t(X)
-      E <- matrix(0,n,n)
-      E[p,p] <- 1
-      M[,,k] <- C - R %*% E %*% R - sum(diag(E %*% R)) * R - R %*% t(E) %*% R
-      k <- k+1
-      #case q<p
-      if (p > 1) {
-        for (q in 1:(p-1)){
-          C <- ((scale %*% (X[p,]*X[q,]))*X) %*% t(X) * sqrt(2)
-          E <- matrix(0,n,n)
-          E[p,q] <- 1/sqrt(2)
-          E[q,p] <- E[p,q]
-          M[,,k] <- C - R %*% E %*% R - sum(diag(E %*% R)) * R - R %*% t(E) %*% R
-          k <- k+1
-        }
-      }
-    }
-
-    return(M)
-
-  }
-
-
-
-
-
 
   p <- nrow(X)
   n <- ncol(X)
