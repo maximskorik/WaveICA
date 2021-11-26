@@ -37,8 +37,6 @@ normFact <- function(fact,X,ref,refType,k=20,t=0.5,ref2=NULL,refType2=NULL,t2=0.
     obj = svd(X,nu=k,nv=k)
     A = obj$u%*%diag(obj$d[1:k],k)
     B = obj$v
-  } else {
-    stop("Factorization method should be SVD or stICA")
   }
 
 

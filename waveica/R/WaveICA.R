@@ -85,6 +85,7 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff
 #' @param data Sample-by-matrix metabolomics data.
 #' @param wf selecting wavelet functions, the default is "haar".
 #' @param batch batch labels.
+#' @param factorization string. Matrix factorization method, options are ["stICA", "SVD"]
 #' @param group denoting the biological group such as disease vs group.
 #' This param is optional. The default is NULL.
 #' @param K The maximal component that ICA decomposes.
@@ -102,11 +103,16 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff
 WaveICA <- function(data,
                     wf = "haar",
                     batch,
+                    factorization = "stICA",
                     group = NULL,
                     K = 20,
                     t = 0.05,
                     t2 = 0.05,
                     alpha = 0) {
+
+  if (!factorization %in% c("stICA", "SVD")) {
+    stop("The factorization method should be stICA or SVD.")
+  }
 
   level <- floor(log(nrow(data), 2))
   coef <- wt_decomposition(data, level, wf)
@@ -117,7 +123,7 @@ WaveICA <- function(data,
   cat(paste("Performing ICA...\n"))
   for (i in (1:index)) {
     data_coef <- coef[[i]]
-    data_coef_ICA <- normFact(fact = "stICA", X = t(data_coef), ref = batch, refType = "categorical", k = K, t = t, ref2 = group, refType2 = "categorical", t2 = t2, alpha)
+    data_coef_ICA <- normFact(fact = factorization, X = t(data_coef), ref = batch, refType = "categorical", k = K, t = t, ref2 = group, refType2 = "categorical", t2 = t2, alpha)
     data_wave_ICA[[i]] <- t(data_coef_ICA$Xn)
   }
   data_wave <- wt_reconstruction(data, data_wave_ICA, wf)
