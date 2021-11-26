@@ -1,5 +1,6 @@
+#' @description Wavelet decomposition.
+#' @importFrom waveslim modwt
 wt_decomposition <- function(data, level, wf) {
-  ### Wavelet Decomposition
   coef <- list()
   for (k in 1:(level + 1)) {
     coef[[k]] <- matrix(NA, nrow(data), ncol(data))
@@ -15,8 +16,9 @@ wt_decomposition <- function(data, level, wf) {
   return(coef)
 }
 
+#' @description Wavelet reconstruction.
+#' @importFrom waveslim imodwt
 wt_reconstruction <- function(data, data_wave_ICA, wf) {
-  ### Wavelet Reconstruction
   index <- ncol(data)
   index1 <- length(data_wave_ICA)
   data_coef <- matrix(NA, nrow(data_wave_ICA[[1]]), index1)
@@ -38,19 +40,34 @@ wt_reconstruction <- function(data, data_wave_ICA, wf) {
   return(data_wave)
 }
 
-gam_wrapper <- function(B, injection_order) {
-  corr <- gam(x~s(Injection_Order))
+#' @importFrom mgcv gam
+gam_wrapper <- function(x, injection_order) {
+  corr <- gam(x~s(injection_order))
   corr_summary <- summary(corr)
   corr_r <- corr_summary$r.sq
   return(corr_r)
 }
 
+#' @title WaveICA_nonbatchwise
+#' @description Removing batch effects for metabolomics data without batch information.
+#' @author Kui Deng
+#' \email{dengkui_stat@163.com}
+#' @param data Dataframe. Feature table with intensities.
+#' @param wf String. Wavelet function. The default is "haar".
+#' @param injection_order Vector. Injection order of the samples.
+#' @param alpha Float between 0 and 1. The trade-off value between the independence of samples and those
+#' of variables. The default is 0.
+#' @param cutoff Float between 0 and 1. The threshold of the variation explained by the injection order for
+#' independent components.
+#' @param K Integer. The maximal number of independent components. The default is 10.
+#' @return Dataframe. Feature table with intensities corrected of batch effects.
+#' @importFrom parallel mclapply
 #' @export
-WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff, K) {
+WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cutoff, K=20) {
   level <- floor(log(nrow(data), 2))
   coef <- wt_decomposition(data, level, wf)
 
-  ##### ICA
+  ### ICA
   index <- level + 1
   data_wave_ICA <- list()
   cat(paste("Performing ICA...\n"))
@@ -61,7 +78,7 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff
     A <- data_coef_ICA$A
     B <- as.data.frame(B)
 
-    ## Gam
+    ### Gam
     corr <- mclapply(B, gam_wrapper, injection_order)
     corr <- unlist(corr)
     label <- which(corr>=cutoff)
@@ -82,23 +99,17 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff
 #' @description Removing batch effects for metabolomics data.
 #' @author Kui Deng
 #' \email{dengkui_stat@163.com}
-#' @param data Sample-by-matrix metabolomics data.
-#' @param wf selecting wavelet functions, the default is "haar".
-#' @param batch batch labels.
-#' @param factorization string. Matrix factorization method, options are ["stICA", "SVD"]
-#' @param group denoting the biological group such as disease vs group.
-#' This param is optional. The default is NULL.
-#' @param K The maximal component that ICA decomposes.
-#' @param t The threshold to consider a component associate with the batch,
-#' should be between 0 and 1.
-#' @param t2 The threshold to consider a component associate with the group,
-#' should be between 0 and 1.
-#' @param alpha The trade-off value between the independence of samples and those
-#' of variables and should be between 0 and 1.
-#' @return A list that contains the clean data.
-#' @importFrom mgcv gam
-#' @importFrom parallel mclapply
-#' @importFrom waveslim modwt imodwt
+#' @param data Dataframe. Feature table with intensities.
+#' @param wf String. Wavelet function, the default is "haar".
+#' @param batch Vector. Batch number of each sample.
+#' @param factorization String. Matrix factorization method, options are ["stICA", "SVD"]. The default is "stICA".
+#' @param group Vector, optionall. Type of a sample (blank, sample, QC) numerically encoded to blank:0, sample:1, QC:2.
+#' @param K Integer. The maximal number of independent components. The default is 20.
+#' @param t Float between 0 and 1. The threshold to consider a component associate with the batch. The default is 0.05.
+#' @param t2 Float between 0 and 1. The threshold to consider a component associate with the group. The default is 0.05.
+#' @param alpha Float between 0 and 1. The trade-off value between the independence of samples and those
+#' of variables. The default is 0.
+#' @return Dataframe. Feature table with intensities corrected of batch effects.
 #' @export
 WaveICA <- function(data,
                     wf = "haar",
@@ -111,16 +122,16 @@ WaveICA <- function(data,
                     alpha = 0) {
 
   if (!factorization %in% c("stICA", "SVD")) {
-    stop("The factorization method should be stICA or SVD.")
+    stop("The factorization method should be 'stICA' or 'SVD'.")
   }
 
   level <- floor(log(nrow(data), 2))
   coef <- wt_decomposition(data, level, wf)
 
-  ##### ICA
+  ### Factorization
   index <- level + 1
   data_wave_ICA <- list()
-  cat(paste("Performing ICA...\n"))
+  cat(paste("Performing matrix factorization...\n"))
   for (i in (1:index)) {
     data_coef <- coef[[i]]
     data_coef_ICA <- normFact(fact = factorization, X = t(data_coef), ref = batch, refType = "categorical", k = K, t = t, ref2 = group, refType2 = "categorical", t2 = t2, alpha)
