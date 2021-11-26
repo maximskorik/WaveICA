@@ -52,6 +52,8 @@ gam_wrapper <- function(x, injection_order) {
 #' @description Removing batch effects for metabolomics data without batch information.
 #' @author Kui Deng
 #' \email{dengkui_stat@163.com}
+#' @author RECETOX
+#' \email{GalaxyToolsDevelopmentandDeployment@space.muni.cz}
 #' @param data Dataframe. Feature table with intensities.
 #' @param wf String. Wavelet function. The default is "haar".
 #' @param injection_order Vector. Injection order of the samples.
@@ -99,6 +101,8 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cuto
 #' @description Removing batch effects for metabolomics data.
 #' @author Kui Deng
 #' \email{dengkui_stat@163.com}
+#' @author RECETOX
+#' \email{GalaxyToolsDevelopmentandDeployment@space.muni.cz}
 #' @param data Dataframe. Feature table with intensities.
 #' @param wf String. Wavelet function, the default is "haar".
 #' @param batch Vector. Batch number of each sample.
