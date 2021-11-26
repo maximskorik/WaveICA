@@ -8,18 +8,9 @@ Description: Removal of batch effects for large-scale untargeted metabolomics da
 License: No
 Encoding: UTF-8
 LazyData: true
-Imports: waveslim, JADE, corpcor 
+Imports: waveslim, JADE, corpcor, mgcv
 Suggests: 
-    pROC,
     parallel,
-    plsdepot,
-    fdrtool,
-    scatterplot3d,
-    ggfortify,
-    RColorBrewer,
-    ggplot2,
-    graphics,
-    stats,
     dplyr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
