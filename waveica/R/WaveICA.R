@@ -38,6 +38,13 @@ wt_reconstruction <- function(data, data_wave_ICA, wf) {
   return(data_wave)
 }
 
+gam_wrapper <- function(B, injection_order) {
+  corr <- gam(x~s(Injection_Order))
+  corr_summary <- summary(corr)
+  corr_r <- corr_summary$r.sq
+  return(corr_r)
+}
+
 #' @title WaveICA
 #' @description Removing batch effects for metabolomics data.
 #' @author Kui Deng
@@ -86,12 +93,7 @@ WaveICA <- function(data,
       B <- as.data.frame(B)
 
       ## Gam
-      corr <- mclapply(B,function(x){
-      corr <- gam(x~s(Injection_Order))
-      corr_summary <- summary(corr)
-      corr_r <- corr_summary$r.sq
-      return(corr_r)
-      })
+      corr <- mclapply(B, gam_wrapper, injection_order)
       corr <- unlist(corr)
       label <- which(corr>=Cutoff)
       B_new <- B[,label,drop=F]
