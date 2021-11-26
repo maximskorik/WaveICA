@@ -45,6 +45,39 @@ gam_wrapper <- function(B, injection_order) {
   return(corr_r)
 }
 
+#' @export
+WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff, K) {
+  level <- floor(log(nrow(data), 2))
+  coef <- wt_decomposition(data, level, wf)
+
+  ##### ICA
+  index <- level + 1
+  data_wave_ICA <- list()
+  cat(paste("Performing ICA...\n"))
+  for (i in (1:index)) {
+    data_coef <- coef[[i]]
+    data_coef_ICA<-unbiased_stICA(X=t(data_coef),k=K,alpha)
+    B <- data_coef_ICA$B
+    A <- data_coef_ICA$A
+    B <- as.data.frame(B)
+
+    ## Gam
+    corr <- mclapply(B, gam_wrapper, injection_order)
+    corr <- unlist(corr)
+    label <- which(corr>=cutoff)
+    B_new <- B[,label,drop=F]
+    A_new <- A[,label,drop=F]
+    Xn = data_coef-t(A_new %*% t(B_new))
+
+    data_wave_ICA[[i]]<-Xn
+  }
+  data_wave <- wt_reconstruction(data, data_wave_ICA, wf)
+
+  rownames(data_wave) <- rownames(data)
+  colnames(data_wave) <- colnames(data)
+  return(list(data_wave = data_wave))
+}
+
 #' @title WaveICA
 #' @description Removing batch effects for metabolomics data.
 #' @author Kui Deng

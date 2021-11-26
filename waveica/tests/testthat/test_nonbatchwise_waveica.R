@@ -5,12 +5,12 @@ patrick::with_parameters_test_that("Nonbatchwise WAveICA:", {
   injection_order <- dplyr::select(input_data, injectionOrder)
   input_data <- dplyr::select(input_data, -any_of(c("sampleName", "injectionOrder", "sampleType", "batch", "class")))
 
-  actual <- WaveICA(data = input_data,
+  actual <- WaveICA_nonbatchwise(data = input_data,
                     wf = "haar",
-                    Injection_order = injection_order,
+                    injection_order = injection_order,
                     K = 10,
                     alpha = 0,
-                    Cutoff = 0.1)
+                    cutoff = 0.1)
   actual <- actual$data_wave
 
   expected_path <- file.path("test-data/nonbatchwise-correction", expected)
