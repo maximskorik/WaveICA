@@ -101,9 +101,7 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha, cutoff
 #' @export
 WaveICA <- function(data,
                     wf = "haar",
-                    batch = NULL,
-                    Cutoff = NULL,
-                    Injection_order = NULL,
+                    batch,
                     group = NULL,
                     K = 20,
                     t = 0.05,
@@ -119,27 +117,9 @@ WaveICA <- function(data,
   cat(paste("Performing ICA...\n"))
   for (i in (1:index)) {
     data_coef <- coef[[i]]
-    if (is.null(batch)) {
-      data_coef_ICA<-unbiased_stICA(X=t(data_coef),k=K,alpha)
-      B <- data_coef_ICA$B
-      A <- data_coef_ICA$A
-      B <- as.data.frame(B)
-
-      ## Gam
-      corr <- mclapply(B, gam_wrapper, injection_order)
-      corr <- unlist(corr)
-      label <- which(corr>=Cutoff)
-      B_new <- B[,label,drop=F]
-      A_new <- A[,label,drop=F]
-      Xn = data_coef-t(A_new %*% t(B_new))
-
-      data_wave_ICA[[i]]<-Xn
-    } else {
     data_coef_ICA <- normFact(fact = "stICA", X = t(data_coef), ref = batch, refType = "categorical", k = K, t = t, ref2 = group, refType2 = "categorical", t2 = t2, alpha)
     data_wave_ICA[[i]] <- t(data_coef_ICA$Xn)
-    }
   }
-
   data_wave <- wt_reconstruction(data, data_wave_ICA, wf)
 
   rownames(data_wave) <- rownames(data)
