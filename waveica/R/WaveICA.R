@@ -94,7 +94,7 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cuto
 
   rownames(data_wave) <- rownames(data)
   colnames(data_wave) <- colnames(data)
-  return(list(data_wave = data_wave))
+  return(data_wave)
 }
 
 #' @title WaveICA
@@ -145,5 +145,5 @@ WaveICA <- function(data,
 
   rownames(data_wave) <- rownames(data)
   colnames(data_wave) <- colnames(data)
-  return(list(data_wave = data_wave))
+  return(data_wave)
 }

@@ -14,8 +14,7 @@ patrick::with_parameters_test_that("Batchwise WaveICA:", {
                     t = 0.05,
                     t2 = 0.05,
                     alpha = 0)
-  actual <- actual$data_wave
-  
+
   expected_path <- file.path("test-data/batchwise-correction", expected)
   expected <- readRDS(expected_path)
   

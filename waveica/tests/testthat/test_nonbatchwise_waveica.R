@@ -11,7 +11,6 @@ patrick::with_parameters_test_that("Nonbatchwise WAveICA:", {
                     K = 10,
                     alpha = 0,
                     cutoff = 0.1)
-  actual <- actual$data_wave
 
   expected_path <- file.path("test-data/nonbatchwise-correction", expected)
   expected <- readRDS(expected_path)
