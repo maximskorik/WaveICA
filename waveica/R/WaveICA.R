@@ -107,8 +107,8 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cuto
 #' @param wf String. Wavelet function, the default is "haar".
 #' @param batch Vector. Batch number of each sample.
 #' @param factorization String. Matrix factorization method, options are ["stICA", "SVD"]. The default is "stICA".
-#' @param group Vector, optionall. Type of a sample (blank, sample, QC) numerically encoded to blank:0, sample:1, QC:2.
-#' @param K Integer. The maximal number of independent components. The default is 20.
+#' @param group Vector, optional. Type of a sample (blank, sample, QC) numerically encoded to blank:0, sample:1, QC:2.
+#' @param K Integer. The maximal number of independent components (for ICA) or singular vectors (SVD). The default is 20.
 #' @param t Float between 0 and 1. The threshold to consider a component associate with the batch. The default is 0.05.
 #' @param t2 Float between 0 and 1. The threshold to consider a component associate with the group. The default is 0.05.
 #' @param alpha Float between 0 and 1. The trade-off value between the independence of samples and those

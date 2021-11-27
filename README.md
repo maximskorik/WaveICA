@@ -10,7 +10,6 @@ and WaveICA 2.0 and contains fewer dependencies.
 
 You can install WaveICA Package Using the following commands:
     
-    library(devtools)
     devtools::install_github("RECETOX/WaveICA",host="https://api.github.com")
 
 To run WaveICA , you can use the following command:
