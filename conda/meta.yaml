@@ -37,7 +37,8 @@ test:
 about:
   home: "{{ github }}"
   license: MIT
-  summary: Removal of batch effects for large-scale untargeted metabolomics data based on wavelet analysis.
+  summary: Removal of batch effects for large-scale untargeted metabolomics data based on wavelet transform.
+    This is a customized fork of the original WaveICA package that contains both WaveICA and WaveICA 2.0.
 
 extra:
   maintainers:
@@ -46,3 +47,4 @@ extra:
     - maximskorik
   identifiers:
     - doi:10.1016/j.aca.2019.02.010
+    - 10.1007/s11306-021-01839-7
