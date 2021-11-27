@@ -6,7 +6,7 @@ patrick::with_parameters_test_that("Batchwise WaveICA:", {
   group <- as.integer(input_data$sampleType)
   input_data <- dplyr::select(input_data, -any_of(c("sampleName", "injectionOrder", "sampleType", "batch", "class")))
   
-  actual <- WaveICA(data = input_data,
+  actual <- waveica(data = input_data,
                     wf = "haar",
                     group = group,
                     batch = batch,

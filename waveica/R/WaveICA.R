@@ -65,7 +65,7 @@ gam_wrapper <- function(x, injection_order) {
 #' @return Dataframe. Feature table with intensities corrected of batch effects.
 #' @importFrom parallel mclapply
 #' @export
-WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cutoff, K=20) {
+waveica_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cutoff, K=20) {
   level <- floor(log(nrow(data), 2))
   coef <- wt_decomposition(data, level, wf)
 
@@ -115,7 +115,7 @@ WaveICA_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cuto
 #' of variables. The default is 0.
 #' @return Dataframe. Feature table with intensities corrected of batch effects.
 #' @export
-WaveICA <- function(data,
+waveica <- function(data,
                     wf = "haar",
                     batch,
                     factorization = "stICA",

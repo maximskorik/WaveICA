@@ -32,7 +32,7 @@ requirements:
 
 test:
   commands:
-    - $R -e "library('WaveICA')"
+    - $R -e "library('recetox.waveica')"
 
 about:
   home: "{{ github }}"

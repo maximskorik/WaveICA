@@ -1,4 +1,4 @@
 library(testthat)
-library(WaveICA)
+library(recetox.waveica)
 
-test_check("WaveICA")
+test_check("recetox.waveica")

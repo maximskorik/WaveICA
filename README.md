@@ -14,21 +14,21 @@ You can install WaveICA Package Using the following commands:
 
 To run WaveICA , you can use the following command:
     
-    library(WaveICA)
-    features <- WaveICA(features_table, wf, batch, factorization, group, K, t, t2, alpha)
+    library(recetox.waveica)
+    features <- waveica(features_table, wf, batch, factorization, group, K, t, t2, alpha)
 
 Alternatively, if your data contains no batch information or the samples have been measured in a single batch you can run:
 
-    library(WaveICA)
-    features <- WaveICA_nonbatchwise(features_table, wf, injection_order, alpha, cutoff, K)
+    library(recetox.waveica)
+    features <- waveica_nonbatchwise(features_table, wf, injection_order, alpha, cutoff, K)
 
 For further information on how to use the tool please refer to our docs in this repository.
 
-When using **WaveICA**, please cite as: Deng K, Zhang F, Tan Q, Huang Y, Song W, Rong Z, Zhu ZJ, Li K, Li Z. 
+When using **waveica**, please cite as: Deng K, Zhang F, Tan Q, Huang Y, Song W, Rong Z, Zhu ZJ, Li K, Li Z. 
 WaveICA: A novel algorithm to remove batch effects for large-scale untargeted metabolomics data based on wavelet
 analysis. Anal Chim Acta. 2019 Jul 11;1061:60-69. doi: 10.1016/j.aca.2019.02.010. Epub 2019 Feb 19. PMID: 30926040.
 
-When using **WaveICA_nonbatchwise**, please cite as: Deng K, Zhao F, Rong Z, Cao L, Zhang L, Li K, Hou Y, Zhu ZJ.
+When using **waveica_nonbatchwise**, please cite as: Deng K, Zhao F, Rong Z, Cao L, Zhang L, Li K, Hou Y, Zhu ZJ.
 WaveICA 2.0: a novel batch effect removal method for untargeted metabolomics data without using batch information.
 Metabolomics. 2021 Sep 20;17(10):87. doi: 10.1007/s11306-021-01839-7. PMID: 34542717.
 

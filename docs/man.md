@@ -4,7 +4,7 @@ The WaveICA method uses the time trend of samples over the injection order, deco
 multi-scale data with different features, extracts and removes the batch effect information in multi-scale data,
 and obtains clean data.
 
-This WaveICA is has been slightly refactored and modified by RECETOX: is has fewer dependencies, and includes both original
+This is a customized WaveICA slightly refactored and adjusted by RECETOX: it has fewer dependencies, and includes both original
 WaveICA and its successor WaveICA 2.0.
 
 To use WaveICA, first install the package:
@@ -14,8 +14,8 @@ devtools::install_github("RECETOX/WaveICA",host="https://api.github.com")
 Then you can use either of two batch effects removal functions provided by the package. If your data has been measured
 in multiple batches and contains batch information, we recommend you to use `WaveICA` function. You can use it as follows:
 ```
-library(WaveICA)
-features <- WaveICA(features_table, wf, batch, factorization, group, K, t, t2, alpha) 
+library(recetox.waveica)
+features <- waveica(features_table, wf, batch, factorization, group, K, t, t2, alpha) 
 ```
 + `features_table` is a sample-by-feature matrix in the following format:
 
@@ -49,8 +49,8 @@ computed by **singular value decomposition** if `factorization="svd"`.
 Alternatively, if your data has been measured in a single batch or the batch information is not available, we recommend
 using `WaveICA_nonbatchwise` function. You can use it as follows:
 ```
-library(WaveICA)
-features <- WaveICA_nonbatchwise(features_table, wf, injection_order, alpha, cutoff, K) 
+library(recetox.waveica)
+features <- waveica_nonbatchwise(features_table, wf, injection_order, alpha, cutoff, K) 
 ```
 + `features_table`, `wf`, `alpha`, and `K` are the same as above.
 + `injection_order` is a numeric vector representing the injection order of samples. It's size has to be *number of samples*
