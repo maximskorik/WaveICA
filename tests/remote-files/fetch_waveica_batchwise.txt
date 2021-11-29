@@ -1,4 +1,2 @@
-https://gitlab.ics.muni.cz/umsa/umsa-files/-/raw/master/testdata/recetox-WaveICA/amide_data_v1.rds
-https://gitlab.ics.muni.cz/umsa/umsa-files/-/raw/master/testdata/recetox-WaveICA/amide_data_v2.rds
 https://gitlab.ics.muni.cz/umsa/umsa-files/-/raw/master/testdata/recetox-WaveICA/batchwise-correction/amide_corrected_v1.rds
 https://gitlab.ics.muni.cz/umsa/umsa-files/-/raw/master/testdata/recetox-WaveICA/batchwise-correction/amide_corrected_v2.rds
