@@ -42,7 +42,7 @@ wt_reconstruction <- function(data, data_wave_ICA, wf) {
 
 #' @importFrom mgcv gam
 gam_wrapper <- function(x, injection_order) {
-  corr <- gam(x~s(injection_order))
+  corr <- gam(x ~ s(injection_order))
   corr_summary <- summary(corr)
   corr_r <- corr_summary$r.sq
   return(corr_r)
@@ -65,7 +65,7 @@ gam_wrapper <- function(x, injection_order) {
 #' @return Dataframe. Feature table with intensities corrected of batch effects.
 #' @importFrom parallel mclapply
 #' @export
-waveica_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cutoff, K=20) {
+waveica_nonbatchwise <- function(data, wf = "haar", injection_order, alpha = 0, cutoff, K = 20) {
   level <- floor(log(nrow(data), 2))
   coef <- wt_decomposition(data, level, wf)
 
@@ -75,7 +75,7 @@ waveica_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cuto
   cat(paste("Performing ICA...\n"))
   for (i in (1:index)) {
     data_coef <- coef[[i]]
-    data_coef_ICA<-unbiased_stICA(X=t(data_coef),k=K,alpha)
+    data_coef_ICA <- unbiased_stICA(X = t(data_coef), k = K, alpha)
     B <- data_coef_ICA$B
     A <- data_coef_ICA$A
     B <- as.data.frame(B)
@@ -83,12 +83,12 @@ waveica_nonbatchwise <- function(data, wf="haar", injection_order, alpha=0, cuto
     ### Gam
     corr <- mclapply(B, gam_wrapper, injection_order)
     corr <- unlist(corr)
-    label <- which(corr>=cutoff)
-    B_new <- B[,label,drop=F]
-    A_new <- A[,label,drop=F]
-    Xn = data_coef-t(A_new %*% t(B_new))
+    label <- which(corr >= cutoff)
+    B_new <- B[, label, drop = F]
+    A_new <- A[, label, drop = F]
+    Xn <- data_coef - t(A_new %*% t(B_new))
 
-    data_wave_ICA[[i]]<-Xn
+    data_wave_ICA[[i]] <- Xn
   }
   data_wave <- wt_reconstruction(data, data_wave_ICA, wf)
 
@@ -124,7 +124,6 @@ waveica <- function(data,
                     t = 0.05,
                     t2 = 0.05,
                     alpha = 0) {
-
   if (!factorization %in% c("stICA", "SVD")) {
     stop("The factorization method should be 'stICA' or 'SVD'.")
   }
