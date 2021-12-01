@@ -39,7 +39,7 @@ jobs:
           conda init bash
           conda env list
       - name: Fetch input data
-        run: wget -P tests/testthat/test-data -i tests/remote-files/input-data.txt
+        run: wget -P tests/testthat/test-data -i tests/remote-files/fetch_input_data.txt
       - name: Fetch batchwise waveica results
         run: wget -P tests/testthat/test-data/batchwise-correction -i tests/remote-files/fetch_waveica_batchwise.txt
       - name: Fetch nonbatchwise waveica results
@@ -48,3 +48,4 @@ jobs:
         run: |
           conda activate recetox-waveica-dev
           Rscript -e "devtools::check(error_on = 'error')"
+
