@@ -8,7 +8,7 @@ package:
 
 source:
   url: "{{ github }}/archive/v{{ version }}.tar.gz"
-  sha256: 5d6ca5d6bc95b1c169a58afb76810dbaf169c58f190f6f8969c0cd2d83535743
+  sha256: 77bb6ccc4cd18e30d4ee9f3effedcc29dd9ce29b535b645ea6b6765fe8cbcd41
 
 build:
   number: 0
@@ -24,11 +24,13 @@ requirements:
     - r-waveslim
     - r-jade
     - r-corpcor
+    - r-mgcv
   run:
     - r-base
     - r-waveslim
     - r-jade
     - r-corpcor
+    - r-mgcv
 
 test:
   commands:
@@ -47,4 +49,4 @@ extra:
     - maximskorik
   identifiers:
     - doi:10.1016/j.aca.2019.02.010
-    - 10.1007/s11306-021-01839-7
+    - doi:10.1007/s11306-021-01839-7
