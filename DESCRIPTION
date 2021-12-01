@@ -1,12 +1,21 @@
-Package: WaveICA
+Package: recetox.waveica
 Type: Package
-Title: WaveICA
-Version: 0.1.0
-Author: Kui Deng and Kang Li
-Maintainer: Kui Deng <dengkui_stat@163.com>
-Description: Removal of batch effects for large-scale untargeted metabolomics data based on wavelet transform.
-License: No
+Title: recetox.waveica
+Version: 0.2.0
+Authors@R: c(
+ person("Kui", "Deng", email="dengkui_stat@163.com", role="aut"),
+ person("Kang", "Li", role="aut"),
+ person("RECETOX", email = "GalaxyToolsDevelopmentandDeployment@space.muni.cz", role = "cre"))
+Maintainer: RECETOX <GalaxyToolsDevelopmentandDeployment@space.muni.cz>
+Description: Removal of batch effects for large-scale untargeted metabolomics data based on wavelet transform. This is a customized fork of the original WaveICA package that contains both WaveICA and WaveICA 2.0.
+License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports: waveslim, JADE, corpcor 
-Suggests: pROC, parallel, plsdepot, fdrtool, scatterplot3d, ggfortify, RColorBrewer, ggplot2, graphics, stats
+Imports: waveslim, JADE, corpcor, mgcv
+Suggests: 
+    parallel,
+    dplyr,
+    patrick,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.1.2

@@ -1,0 +1,14 @@
+name: recetox-waveica-dev
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base >= 4.1.0
+  - r-waveslim
+  - r-jade
+  - r-mgcv
+  - r-corpcor
+  - r-devtools
+  - r-patrick
+  - r-dplyr
