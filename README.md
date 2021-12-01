@@ -6,13 +6,13 @@ data based on wavelet analysis](https://doi.org/10.1016/j.aca.2019.02.010)" and 
 removal method for untargeted metabolomics data without using batch information](https://doi.org/10.1007/s11306-021-01839-7)."
 
 This fork is a slightly modified WaveICA by [RECETOX](https://github.com/RECETOX) that includes both original WaveICA
-and WaveICA 2.0 and contains fewer dependencies.
+and WaveICA 2.0, and contains fewer dependencies.
 
 You can install WaveICA Package Using the following commands:
     
     devtools::install_github("RECETOX/WaveICA",host="https://api.github.com")
 
-To run WaveICA , you can use the following command:
+To run WaveICA, you can use the following command:
     
     library(recetox.waveica)
     features <- waveica(features_table, wf, batch, factorization, group, K, t, t2, alpha)
